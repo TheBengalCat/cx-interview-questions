@@ -1,4 +1,4 @@
-from typing import Mapping, Union, Sequence
+from typing import Mapping, Union, Sequence, Tuple
 
 
 class Basket:
@@ -18,7 +18,11 @@ class Basket:
             self.contents[item] = quantity
 
 
-def checkout_basket(basket: Basket, catalog: Mapping[str, float], offers: Mapping[str, Mapping[str, Union[Sequence[int], float]]]) -> float:
+def checkout_basket(
+    basket: Basket,
+    catalog: Mapping[str, float],
+    offers: Mapping[str, Mapping[str, Union[Sequence[int], float]]],
+) -> Tuple[float]:
 
     subtotal: float = 0
     discount: float = 0
@@ -47,9 +51,13 @@ def get_item_discounts(
 
     for item in basket.contents:
 
-        if item in offers['PercentageDiscount']:
+        if item in offers["PercentageDiscount"]:
 
-            discount += offers['PercentageDiscount'][item] * catalog[item] * basket.contents[item]
+            discount += (
+                offers["PercentageDiscount"][item]
+                * catalog[item]
+                * basket.contents[item]
+            )
 
     return round(discount, 2)
 
@@ -64,13 +72,18 @@ def get_buy_x_get_y_discounts(
 
     for item in basket.contents:
 
-        if item in offers['BuyXGetY']:
+        if item in offers["BuyXGetY"]:
 
-            x = offers['BuyXGetY'][item][0]
-            y = offers['BuyXGetY'][item][1]
+            x = offers["BuyXGetY"][item][0]
+            y = offers["BuyXGetY"][item][1]
 
             items_needed_for_eligibility = x + y
 
-            discount += basket.contents[item] // items_needed_for_eligibility * y * catalog[item]
+            discount += (
+                basket.contents[item]
+                // items_needed_for_eligibility
+                * y
+                * catalog[item]
+            )
 
     return round(discount, 2)
