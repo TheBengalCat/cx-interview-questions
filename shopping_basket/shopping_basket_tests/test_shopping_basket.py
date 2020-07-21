@@ -1,6 +1,8 @@
-from shopping_basket import Basket, calculate_basket_subtotal
+from shopping_basket import Basket, calculate_basket_subtotal, get_item_discounts
 
 catalog = {"peach": 1.53, "tomato": 0.60, "cornflakes": 2.35}
+
+offers = {"BuyXGetY": {"peach": [2, 1]}, "PercentageDiscount": {"tomato": 0.25}}
 
 
 def test_new_basket_returns_empty_dict():
@@ -74,3 +76,31 @@ def test_calculate_basket_subtotal_with_multiple_items():
     subtotal = calculate_basket_subtotal(basket, catalog)
 
     assert subtotal == 2.73
+
+
+def test_calculate_percentage_discount_for_one_item():
+    # Discount tomato by 25%
+
+    offers = {"BuyXGetY": {"": []}, "PercentageDiscount": {"tomato": 0.25}}
+
+    basket = Basket()
+
+    basket.add_item('tomato',1)
+
+    discount = get_item_discounts(basket, catalog, offers)
+
+    assert discount == 0.15
+
+def test_calculate_percentage_discount_for_multiple_items():
+    # Discount tomato by 25% and cornflakes by 50%
+
+    offers = {"BuyXGetY": {"": []}, "PercentageDiscount": {"tomato": 0.25, "cornflakes": 0.50}}
+
+    basket = Basket()
+
+    basket.add_item('tomato', 1)
+    basket.add_item('cornflakes', 2)
+
+    discount = get_item_discounts(basket, catalog, offers)
+
+    assert discount == 2.50
