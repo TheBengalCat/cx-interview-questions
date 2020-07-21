@@ -18,15 +18,23 @@ class Basket:
             self.contents[item] = quantity
 
 
-def calculate_basket_subtotal(basket: Basket, catalog: Mapping[str, float]) -> float:
+def checkout_basket(basket: Basket, catalog: Mapping[str, float], offers: Mapping[str, Mapping[str, Union[Sequence[int], float]]]) -> float:
 
     subtotal: float = 0
+    discount: float = 0
+    total: float = 0
 
     for item in basket.contents:
+        if item in catalog:
+            subtotal += catalog[item] * basket.contents[item]
 
-        subtotal += catalog[item] * basket.contents[item]
+    discount += get_item_discounts(basket, catalog, offers)
+    discount += get_buy_x_get_y_discounts(basket, catalog, offers)
 
-    return subtotal
+    subtotal = round(subtotal, 2)
+    total = round(subtotal - discount, 2)
+
+    return subtotal, discount, total
 
 
 def get_item_discounts(
@@ -43,7 +51,7 @@ def get_item_discounts(
 
             discount += offers['PercentageDiscount'][item] * catalog[item] * basket.contents[item]
 
-    return discount
+    return round(discount, 2)
 
 
 def get_buy_x_get_y_discounts(
