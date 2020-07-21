@@ -1,4 +1,4 @@
-from shopping_basket import Basket, calculate_basket_subtotal, get_item_discounts
+from shopping_basket import Basket, calculate_basket_subtotal, get_item_discounts, get_buy_x_get_y_discounts
 
 catalog = {"peach": 1.53, "tomato": 0.60, "cornflakes": 2.35}
 
@@ -104,3 +104,60 @@ def test_calculate_percentage_discount_for_multiple_items():
     discount = get_item_discounts(basket, catalog, offers)
 
     assert discount == 2.50
+
+def test_calculate_buy_x_get_y_for_one_item_type():
+    # Buy 2 Get 1 Free on peaches
+
+    offers = {"BuyXGetY": {"peach": [2, 1]}, "PercentageDiscount": {"tomato": 0.25}}
+
+    basket = Basket()
+
+    basket.add_item('peach', 3)
+
+    discount = get_buy_x_get_y_discounts(basket, catalog, offers)
+
+    assert discount == 1.53
+
+def test_calculate_buy_x_get_y_for_multiple_items():
+    # Buy 2 Get 1 Free on peaches && Buy 3 Get 2 Free on tomatos
+
+    offers = {"BuyXGetY": {"peach": [2, 1], "tomato": [3, 2]}, "PercentageDiscount": {"tomato": 0.25}}
+
+    basket = Basket()
+
+    basket.add_item('peach', 3)
+    basket.add_item('tomato', 15)
+
+    discount = get_buy_x_get_y_discounts(basket, catalog, offers)
+
+    assert discount == 5.13
+
+def test_buy_three_get_two_and_buy_four_get_one():
+    # Buy 4 Get 1 Free on peaches && Buy 3 Get 2 Free on tomatos
+
+    offers = {"BuyXGetY": {"peach": [4, 1], "tomato": [3, 2]}, "PercentageDiscount": {"tomato": 0.25}}
+
+    basket = Basket()
+
+    basket.add_item('peach', 16)
+    basket.add_item('tomato', 23)
+
+    discount = get_buy_x_get_y_discounts(basket, catalog, offers)
+
+    assert discount == 9.39
+
+
+def test_multiple_buy_x_get_y_offers_with_excess_and_inelegible_quantities():
+    # Buy 3 Get 1 Free on peaches && Buy 3 Get 2 Free on tomatos
+
+    offers = {"BuyXGetY": {"peach": [3, 1], "tomato": [3, 2]}, "PercentageDiscount": {"tomato": 0.25}}
+
+    basket = Basket()
+
+    basket.add_item('peach', 23)
+    basket.add_item('tomato', 4)
+    basket.add_item('corn', 5)
+
+    discount = get_buy_x_get_y_discounts(basket, catalog, offers)
+
+    assert discount == 7.65
