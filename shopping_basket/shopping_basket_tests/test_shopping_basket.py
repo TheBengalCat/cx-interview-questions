@@ -1,6 +1,6 @@
 from shopping_basket import Basket, checkout_basket
 
-catalog = {"peach": 1.53, "tomato": 0.60, "cornflakes": 2.35}
+catalogue = {"peach": 1.53, "tomato": 0.60, "cornflakes": 2.35}
 
 offers = {"BuyXGetY": {"peach": [2, 1]}, "PercentageDiscount": {"tomato": 0.25}}
 
@@ -50,7 +50,7 @@ def test_checkout_basket_with_empty_basket():
 
     basket = Basket()
 
-    subtotal, discount, total = checkout_basket(basket, catalog)
+    subtotal, discount, total = checkout_basket(basket, catalogue)
 
     assert subtotal == 0
     assert discount == 0
@@ -66,7 +66,7 @@ def test_calculate_percentage_discount_for_one_item():
 
     basket.add_item("tomato", 1)
 
-    subtotal, discount, total = checkout_basket(basket, catalog, offers)
+    subtotal, discount, total = checkout_basket(basket, catalogue, offers)
 
     assert subtotal == 0.60
     assert discount == 0.15
@@ -86,7 +86,7 @@ def test_calculate_percentage_discount_for_multiple_items():
     basket.add_item("tomato", 1)
     basket.add_item("cornflakes", 2)
 
-    subtotal, discount, total = checkout_basket(basket, catalog, offers)
+    subtotal, discount, total = checkout_basket(basket, catalogue, offers)
 
     assert subtotal == 5.30
     assert discount == 2.50
@@ -102,7 +102,7 @@ def test_calculate_buy_x_get_y_for_one_item_type():
 
     basket.add_item("peach", 3)
 
-    subtotal, discount, total = checkout_basket(basket, catalog, offers)
+    subtotal, discount, total = checkout_basket(basket, catalogue, offers)
 
     assert subtotal == 4.59
     assert discount == 1.53
@@ -122,7 +122,7 @@ def test_calculate_buy_x_get_y_for_multiple_items():
     basket.add_item("peach", 3)
     basket.add_item("tomato", 15)
 
-    subtotal, discount, total = checkout_basket(basket, catalog, offers)
+    subtotal, discount, total = checkout_basket(basket, catalogue, offers)
 
     assert subtotal == 13.59
     assert discount == 5.13
@@ -142,7 +142,7 @@ def test_buy_three_get_two_and_buy_four_get_one():
     basket.add_item("peach", 16)
     basket.add_item("tomato", 23)
 
-    subtotal, discount, total = checkout_basket(basket, catalog, offers)
+    subtotal, discount, total = checkout_basket(basket, catalogue, offers)
 
     assert subtotal == 38.28
     assert discount == 9.39
@@ -163,7 +163,7 @@ def test_multiple_buy_x_get_y_offers_with_excess_and_inelegible_quantities():
     basket.add_item("tomato", 4)
     basket.add_item("corn", 5)
 
-    subtotal, discount, total = checkout_basket(basket, catalog, offers)
+    subtotal, discount, total = checkout_basket(basket, catalogue, offers)
 
     assert subtotal == 37.59
     assert discount == 7.65
@@ -183,7 +183,7 @@ def test_both_offers_being_used_on_seperate_items():
     basket.add_item("peach", 4)
     basket.add_item("cornflakes", 5)
 
-    subtotal, discount, total = checkout_basket(basket, catalog, offers)
+    subtotal, discount, total = checkout_basket(basket, catalogue, offers)
 
     assert subtotal == 17.87
     assert discount == 4.47
