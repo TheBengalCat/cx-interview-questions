@@ -50,7 +50,7 @@ def test_checkout_basket_with_empty_basket():
 
     basket = Basket()
 
-    subtotal, discount, total = checkout_basket(basket, catalog, offers)
+    subtotal, discount, total = checkout_basket(basket, catalog)
 
     assert subtotal == 0
     assert discount == 0

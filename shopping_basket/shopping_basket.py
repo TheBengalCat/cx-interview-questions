@@ -21,7 +21,7 @@ class Basket:
 def checkout_basket(
     basket: Basket,
     catalog: Mapping[str, float],
-    offers: Mapping[str, Mapping[str, Union[Sequence[int], float]]],
+    offers: Mapping[str, Mapping[str, Union[Sequence[int], float]]] = None,
 ) -> Tuple[float]:
 
     subtotal: float = 0
@@ -32,8 +32,9 @@ def checkout_basket(
         if item in catalog:
             subtotal += catalog[item] * basket.contents[item]
 
-    discount += get_item_discounts(basket, catalog, offers)
-    discount += get_buy_x_get_y_discounts(basket, catalog, offers)
+    if offers:
+        discount += get_item_discounts(basket, catalog, offers)
+        discount += get_buy_x_get_y_discounts(basket, catalog, offers)
 
     subtotal = round(subtotal, 2)
     total = round(subtotal - discount, 2)
